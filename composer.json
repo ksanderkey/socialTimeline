@@ -1,0 +1,17 @@
+{
+    "name": "ksanderkey/social-timeline",
+    "description": "Display social timeline",
+    "authors": [
+        {
+            "name": "Aleksandr Klimenko",
+            "email": "4illout@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
+    },
+    "require": {
+        "ext-curl": "*",
+        "php": ">= 5.4.0"
+    }
+}
