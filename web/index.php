@@ -6,9 +6,12 @@ if ( php_sapi_name() === 'cli-server' && is_file( $filename ) ) {
     return false;
 }
 
+use App\App;
+
 /**
  * @var ClassLoader $loader
  */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
-echo 'init';
+$app = new App();
+$app->run();
