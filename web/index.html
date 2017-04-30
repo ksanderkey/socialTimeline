@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Timeline</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+        .timeline {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Enter user name:</h2>
+    <div>
+        <input id="username" type="text" placeholder="enter name">
+        <button id="getTimeline" type="button">Get User Timeline</button>
+    </div>
+    <div class="timeline">
+        <header>User Timeline:</header>
+        <div id="userTimeline"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    var interval;
+    function timelineRequest(username) {
+        console.log('intervalusername', username);
+        $.ajax({
+            type: 'POST',
+//            url: $(location).attr('origin') + '/index.php/timeline',
+            url: $(location).attr('origin') + '/timeline',
+            success: function (result) {
+                console.log(result);
+                $("#userTimeline").html(result);
+            },
+            data: username
+        });
+    };
+
+    function getTimeLine(e) {
+        var username = $('#username').val();
+        if (!username) {
+            alert('Please enter user name!');
+
+            return;
+        }
+
+        clearInterval(interval);
+        timelineRequest(username);
+        interval = setInterval(function () {
+            timelineRequest(username);
+        }, 5000);
+    };
+
+    $(document).ready(function () {
+        $('#getTimeline').click(getTimeLine);
+    });
+</script>
+</html>
