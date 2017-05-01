@@ -28,16 +28,41 @@
 </div>
 </body>
 <script type="text/javascript">
-    var interval;
+    var timer;
+    function displayResult(result) {
+        var resultHtml = "<ul>";
+        $.each(result, function (i, item) {
+            resultHtml += "<li>" + item.text + "</li>";
+        });
+        resultHtml += "</ul>";
+        $("#userTimeline").html(resultHtml);
+    }
+
+    function displayErrors(result) {
+        var resultHtml = "<span>Error(s) occurred: </span><ul>";
+        $.each(result.errors, function (i, item) {
+            resultHtml += "<li>" + item.code + ":" + item.message + "</li>";
+        });
+        resultHtml += "</ul>";
+        $("#userTimeline").html(resultHtml);
+    }
+
     function timelineRequest(username) {
-        console.log('intervalusername', username);
         $.ajax({
             type: 'POST',
 //            url: $(location).attr('origin') + '/index.php/timeline',
             url: $(location).attr('origin') + '/timeline',
             success: function (result) {
                 console.log(result);
-                $("#userTimeline").html(result);
+                if (typeof result.errors === 'undefined' || result.errors.length < 1) {
+                    displayResult(result);
+                    // set interval on success
+                    timer = setTimeout(function () {
+                        timelineRequest(username);
+                    }, 5000);
+                } else {
+                    displayErrors(result)
+                }
             },
             data: {'username': username}
         });
@@ -51,11 +76,8 @@
             return;
         }
 
-        clearInterval(interval);
+        clearTimeout(timer);
         timelineRequest(username);
-        interval = setInterval(function () {
-            timelineRequest(username);
-        }, 5000);
     };
 
     $(document).ready(function () {
